@@ -93,7 +93,7 @@ resource "aws_instance" "public" {
 }
 
 resource "aws_instance" "name" {
-        ami = "ami-01760eea5c574eb86"
+        ami = ""
         instance_type = "t3.micro"
         vpc_security_group_ids = [ aws_security_group.name.id ]
         subnet_id = aws_subnet.private.id
