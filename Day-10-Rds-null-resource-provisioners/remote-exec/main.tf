@@ -8,7 +8,6 @@ resource "aws_instance" "sql_runner" {
   instance_type          = "t3.micro"
   key_name               = "custkey"                # Replace with your key pair name
   associate_public_ip_address = true
-
   tags = {
     Name = "SQL Runner"
   }
@@ -16,7 +15,7 @@ resource "aws_instance" "sql_runner" {
 
 # Deploy SQL remotely using null_resource + remote-exec
 resource "null_resource" "remote_sql_exec" {
-  depends_on = [aws_db_instance.mysql_rds, aws_instance.sql_runner]
+  #depends_on = [aws_db_instance.mysql_rds, aws_instance.sql_runner]
 
   connection {
     type        = "ssh"
@@ -32,7 +31,9 @@ resource "null_resource" "remote_sql_exec" {
 
   provisioner "remote-exec" {
     inline = [
-      "mysql -h ${aws_db_instance.mysql_rds.address} -u ${jsondecode(aws_secretsmanager_secret_version.rds_secret_value.secret_string)["username"]} -p${jsondecode(aws_secretsmanager_secret_version.rds_secret_value.secret_string)["password"]} < /tmp/init.sql"
+     # "mysql -h ${aws_db_instance.mysql_rds.address} -u ${jsondecode(aws_secretsmanager_secret_version.rds_secret_value.secret_string)["username"]} -p${jsondecode(aws_secretsmanager_secret_version.rds_secret_value.secret_string)["password"]} < /tmp/init.sql"
+     "sudo yum -y install mariadb105-server",
+     "mysql -h database-1.cp4s0mqyo7x3.ap-south-1.rds.amazonaws.com -u admin -pCloud123 < /tmp/init.sql"
     ]
   }
 
