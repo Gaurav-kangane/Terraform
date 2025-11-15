@@ -25,12 +25,12 @@
 ### Example-2
 # variable "create_bucket" {
 #   type    = bool
-#   default = false
+#   default = true
 # }
 
 # resource "aws_s3_bucket" "example" {
 #   count  = var.create_bucket ? 1 : 0
-#   bucket = "my-terraform-example"
+#   bucket = "Terraform-bucket"
 # }
 
 
@@ -39,20 +39,24 @@
 
 
 ## Example-3
-# variable "environment" {
-#   type    = bool
-#   default = true
-# }
+variable "environment" {
+  type    = string
+  default = "prod"
 
-# resource "aws_instance" "example" {
-#   count         = var.environment == "prod" ? 3 : 1
-#   ami           = "ami-123456"
-#   instance_type = "t2.micro"
+    #or
+    # type = bool 
+    # default = true
+}
 
-#   tags = {
-#     Name = "example-${count.index}"
-#   }
-# }
+resource "aws_instance" "example" {
+  count         = var.environment == "prod" ? 3 : 1
+  ami           = "ami-0305d3d91b9f22e84"
+  instance_type = "t3.micro"
+
+  tags = {
+    Name = "example-${count.index}"
+  }
+}
 
 # #In this case:
 # #If var.environment == "prod" → count = 3
